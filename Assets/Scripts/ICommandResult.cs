@@ -1,21 +1,21 @@
 namespace TaskEventResult
 {
-    public interface IEventResult
+    public interface ICommandResult
     {
         
     }
 
-    public class NullResult : IEventResult
+    public class NullResult : ICommandResult
     {
         public static readonly NullResult Default = new NullResult();
     }
 
-    public class ErrorResult : IEventResult
+    public class ErrorResult : ICommandResult
     {
         public static readonly ErrorResult Default = new ErrorResult();
     }
 
-    public class SetNumberResult : IEventResult
+    public class SetNumberResult : ICommandResult
     {
         public int BeforeNumber;
         public int AfterNumber;
@@ -27,7 +27,7 @@ namespace TaskEventResult
         }
     }
     
-    public class AddNumberResult : IEventResult
+    public class AddNumberResult : ICommandResult
     {
         public int BeforeNumber;
         public int AfterNumber;
@@ -39,7 +39,7 @@ namespace TaskEventResult
         }
     }
 
-    public class PrintNumberResult : IEventResult
+    public class PrintNumberResult : ICommandResult
     {
         public int Number;
 

@@ -5,8 +5,8 @@ using TaskEventResult;
 
 public class TaskEventQueueItem : IDisposable
 {
-    public IEventBase Event;
-    public UniTaskCompletionSource<IEventResult> TaskCompletionSource;
+    public ICommand Command;
+    public UniTaskCompletionSource<ICommandResult> TaskCompletionSource;
     
     public void Dispose()
     {

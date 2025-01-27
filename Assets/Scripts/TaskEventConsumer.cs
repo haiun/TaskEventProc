@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TaskEvent;
 using TaskEventResult;
 
-public abstract class TaskEventConsumer
+public abstract class TaskEventConsumer : IDisposable
 {
     private readonly CancellationToken _ct;
     private readonly ConcurrentQueue<TaskEventQueueItem> _eventQueue = new ConcurrentQueue<TaskEventQueueItem>();
@@ -18,12 +19,12 @@ public abstract class TaskEventConsumer
     
     protected abstract void ProcessEventQueueItemImpl(TaskEventQueueItem queueItem);
     
-    public void EnqueueEvent(IEventBase eventItem)
+    public void EnqueueEvent(ICommand commandItem)
     {
         if (IsCancellationRequested)
             return;
         
-        _eventQueue.Enqueue(new TaskEventQueueItem { Event = eventItem });
+        _eventQueue.Enqueue(new TaskEventQueueItem { Command = commandItem });
         int overlaps = Interlocked.Increment(ref _eventOverlaps);
         if (overlaps != 1)
             return;
@@ -31,15 +32,15 @@ public abstract class TaskEventConsumer
         ConsumeQueueAsync().Forget();
     }
 
-    public async UniTask<IEventResult> ProcessEventAsync(IEventBase eventItem)
+    public async UniTask<ICommandResult> ProcessEventAsync(ICommand commandItem)
     {
         if (IsCancellationRequested)
             return ErrorResult.Default;
         
         var eventQueueItem = new TaskEventQueueItem
         {
-            Event = eventItem,
-            TaskCompletionSource = new UniTaskCompletionSource<IEventResult>()
+            Command = commandItem,
+            TaskCompletionSource = new UniTaskCompletionSource<ICommandResult>()
         };
         _eventQueue.Enqueue(eventQueueItem);
         int overlaps = Interlocked.Increment(ref _eventOverlaps);
@@ -68,6 +69,14 @@ public abstract class TaskEventConsumer
 
             if (IsCancellationRequested)
                 return; 
+        }
+    }
+
+    public void Dispose()
+    {
+        while (_eventQueue.TryDequeue(out TaskEventQueueItem queueItem))
+        {
+            queueItem.Dispose();
         }
     }
 }
