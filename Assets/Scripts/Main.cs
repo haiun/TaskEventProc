@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TaskEvent;
-using TaskEventResult;
 using TMPro;
 using UnityEngine;
 
@@ -29,7 +28,7 @@ public class Main : MonoBehaviour, ITaskEventPresenter
         if (_ct.IsCancellationRequested)
             return;
         
-        await UniTask.WhenAll(_eventProducers.Select(producer => producer.RunSequenceAsync(delay)));
+        await UniTask.WhenAll(_eventProducers.Select(producer => producer.RunSequenceAsync(1, 0, delay)));
     }
 
     void OnDestroy()

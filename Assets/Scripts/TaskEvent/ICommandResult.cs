@@ -1,4 +1,4 @@
-namespace TaskEventResult
+namespace TaskEvent
 {
     public interface ICommandResult
     {
@@ -36,16 +36,6 @@ namespace TaskEventResult
         {
             BeforeNumber = beforeNumber;
             AfterNumber = afterNumber;
-        }
-    }
-
-    public class PrintNumberResult : ICommandResult
-    {
-        public int Number;
-
-        public PrintNumberResult(int number)
-        {
-            Number = number;
         }
     }
 }

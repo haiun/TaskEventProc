@@ -14,9 +14,4 @@ namespace TaskEvent
     {
         public int Number;
     }
-
-    public class PrintNumber : ICommand
-    {
-        
-    }
 }

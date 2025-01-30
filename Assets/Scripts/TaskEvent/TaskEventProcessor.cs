@@ -1,46 +1,45 @@
 using System.Threading;
-using TaskEventResult;
 
-public class TaskEventProcessor : TaskEventConsumer
+namespace TaskEvent
 {
-    private readonly ITaskEventPresenter _taskEventPresenter;
-    public int Number { get; private set; }
+    /*
+     * 이벤트를 타입별로 실행하고 결과를 누산합니다.
+     */
+    public class TaskEventProcessor : TaskEventConsumer
+    {
+        private readonly ITaskEventPresenter _taskEventPresenter;
+        public int AccumulatedValue { get; private set; }
     
-    public TaskEventProcessor(int number, ITaskEventPresenter taskEventPresenter, CancellationToken ct) : base(ct)
-    {
-        _taskEventPresenter = taskEventPresenter;
-        Number = number;
-    }
-
-    protected override void ProcessEventQueueItemImpl(TaskEventQueueItem queueItem)
-    {
-        ICommandResult commandResult = NullResult.Default;
-        switch (queueItem.Command)
+        public TaskEventProcessor(int accumulatedValue, ITaskEventPresenter taskEventPresenter, CancellationToken ct) : base(ct)
         {
-            case TaskEvent.SetNumber setNumber:
-            {
-                int beforeNumber = Number;
-                Number = setNumber.Number;
-                commandResult = new SetNumberResult(beforeNumber, Number);
-                break;
-            }
-
-            case TaskEvent.AddNumber addNumber:
-            {
-                int beforeNumber = Number;
-                Number = beforeNumber + addNumber.Number;
-                commandResult = new AddNumberResult(beforeNumber, Number);
-                break;
-            }
-
-            case TaskEvent.PrintNumber printNumber:
-            {
-                commandResult = new PrintNumberResult(Number);
-                break;
-            }
+            _taskEventPresenter = taskEventPresenter;
+            AccumulatedValue = accumulatedValue;
         }
 
-        _taskEventPresenter?.OnProcessed(queueItem.Command, commandResult);
-        queueItem.TaskCompletionSource?.TrySetResult(commandResult);
+        protected override void ProcessEventQueueItemImpl(TaskEventQueueItem queueItem)
+        {
+            ICommandResult commandResult = NullResult.Default;
+            switch (queueItem.Command)
+            {
+                case SetNumber setNumber:
+                {
+                    int beforeNumber = AccumulatedValue;
+                    AccumulatedValue = setNumber.Number;
+                    commandResult = new SetNumberResult(beforeNumber, AccumulatedValue);
+                    break;
+                }
+
+                case AddNumber addNumber:
+                {
+                    int beforeNumber = AccumulatedValue;
+                    AccumulatedValue = beforeNumber + addNumber.Number;
+                    commandResult = new AddNumberResult(beforeNumber, AccumulatedValue);
+                    break;
+                }
+            }
+
+            _taskEventPresenter?.OnProcessed(queueItem.Command, commandResult);
+            queueItem.TaskCompletionSource?.TrySetResult(commandResult);
+        }
     }
 }
