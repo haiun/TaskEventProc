@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +17,6 @@ namespace TaskEvent
         private readonly ITaskEventPresenter _taskEventPresenter;
     
         public int ProducerId { get; }
-        public int Coefficient { get; set; } = 1;
-        public int Constant { get; set; } = 0;
-        public int VariableMin { get; set; } = 1;
-        public int VariableMax { get; set; } = 10;
 
         public TaskEventProducer(int producerId, TaskEventConsumer taskEventConsumer, ITaskEventPresenter taskEventPresenter, CancellationToken ct)
         {
@@ -31,12 +28,20 @@ namespace TaskEvent
             _ct = _cts.Token;
         }
 
-        public async UniTask RunSequenceAsync(int liner, int constant, int delay)
+        public void Cancel()
         {
+            _cts.Cancel();
+        }
+
+        public async UniTask RunSequenceAsync(int liner, int constant, int variableMin, int variableMax, int delay)
+        {
+            if (variableMin > variableMax)
+                return;
+            
             if (_ct.IsCancellationRequested)
                 return;
         
-            foreach (int i in Enumerable.Range(1, 10))
+            foreach (int i in Enumerable.Range(variableMin, variableMax - variableMin + 1))
             {
                 var command = new AddNumber { Number = i * liner + constant };
                 var result = await _taskEventConsumer.ProcessEventAsync(command);
@@ -54,19 +59,24 @@ namespace TaskEvent
             }
         }
     
-        public async UniTask RunAsync()
+        public async UniTask RunAsync(int liner, int constant, int variableMin, int variableMax)
         {
+            if (variableMin > variableMax)
+                return;
+            
             if (_ct.IsCancellationRequested)
                 return;
         
-            var commands = Enumerable.Range(1, 100).Select(i => new AddNumber { Number = i }).ToArray();
+            var commands = Enumerable.Range(variableMin, variableMax - variableMin + 1)
+                .Select(i => new AddNumber { Number = i * liner + constant })
+                .ToArray();
             var tasks = commands.Select(command => _taskEventConsumer.ProcessEventAsync(command)).ToArray();
             var results = await UniTask.WhenAll(tasks);
         
             if (_ct.IsCancellationRequested)
                 return;
         
-            foreach (int i in Enumerable.Range(0, 100))
+            foreach (int i in Enumerable.Range(0, variableMax - variableMin))
             {
                 _taskEventPresenter.OnComplete(ProducerId, commands[i], results[i]);
             }

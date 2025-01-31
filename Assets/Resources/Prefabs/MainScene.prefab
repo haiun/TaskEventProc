@@ -195,7 +195,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2490287655961807275}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1354424743537089230}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: OnClickAddFunctionButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &809351772119683191
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,8 +688,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6622413590014102938}
   m_HandleRect: {fileID: 5166721886989387490}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999015
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -987,7 +999,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 494773326948764060}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99913794
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1295,10 +1307,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8620099571105693428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.000091552734}
-  m_SizeDelta: {x: 0, y: 300}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -432.99997}
+  m_SizeDelta: {x: 580, y: 300}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &14168630762877823
 MonoBehaviour:
@@ -1317,7 +1329,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 6
+  m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
@@ -1325,7 +1337,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 1
+  m_ReverseArrangement: 0
 --- !u!1 &6535023166377728448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1446,7 +1458,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2605036648675995967}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1354424743537089230}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: OnClickSetZeroButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6695497136091041656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,8 +1617,9 @@ GameObject:
   - component: {fileID: 6422326328005778361}
   - component: {fileID: 6341847043520096607}
   - component: {fileID: 4963735384808067518}
+  - component: {fileID: 1354424743537089230}
   m_Layer: 5
-  m_Name: MainView
+  m_Name: MainScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1684,6 +1709,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1354424743537089230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7484241820811093511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06c88baeaff3456f96106c3c12aee4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _producerViewPrefab: {fileID: 5316895343343684207, guid: f959ceb8f7f2b47eb89d40dc819e70d7, type: 3}
+  _processorValue: {fileID: 2467116981267294345}
+  _producerViewParent: {fileID: 3823353844798986602}
 --- !u!1 &7912474064131200454
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,4 +1844,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2255992060821835092}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1354424743537089230}
+        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+        m_MethodName: OnClickExecuteAllButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
