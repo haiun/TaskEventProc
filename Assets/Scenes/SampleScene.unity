@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
-  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -215,21 +214,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519420033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e06c88baeaff3456f96106c3c12aee4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _producerViewPrefab: {fileID: 0}
-  _processorValue: {fileID: 0}
-  _producerViewParent: {fileID: 0}
 --- !u!1001 &1415847604
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -245,18 +229,6 @@ PrefabInstance:
     - target: {fileID: 494773326948764060, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1006800083708406642, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_Size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2253509114692508074, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_Vertical
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2253509114692508074, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_Horizontal
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2403157993068860434, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
       propertyPath: m_Pivot.x
@@ -339,16 +311,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3823353844798986602, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -432.99615
+      propertyPath: m_AnchoredPosition.x
+      value: -0.00001180172
       objectReference: {fileID: 0}
-    - target: {fileID: 4573384750400825225, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4573384750400825225, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
+    - target: {fileID: 4523930158012150511, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5166721886989387490, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
       propertyPath: m_AnchorMax.x
@@ -356,35 +324,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5166721886989387490, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916797423667363543, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916797423667363543, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7484241820811093511, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
       propertyPath: m_Name
       value: MainScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 8620099571105693428, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8620099571105693428, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8620099571105693428, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8620099571105693428, guid: 1eb1d7deba5fd4f8eb200ef0cfda6759, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

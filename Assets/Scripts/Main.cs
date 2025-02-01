@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TaskEvent;
@@ -10,8 +9,8 @@ public class Main : MonoBehaviour, ITaskEventPresenter
 {
     private CancellationToken _ct;
     private TaskEventProcessor _eventProcessor;
-    private readonly List<TaskEventProducer> _eventProducers = new List<TaskEventProducer>();
-    private readonly List<ProducerView> _producerViews = new List<ProducerView>();
+    private readonly List<TaskEventProducer> _taskEventProducers = new List<TaskEventProducer>();
+    private int _nextTaskProducerId = 0;
 
     [SerializeField]
     private ProducerView _producerViewPrefab;
@@ -26,12 +25,15 @@ public class Main : MonoBehaviour, ITaskEventPresenter
     {
         _ct = this.GetCancellationTokenOnDestroy();
         _eventProcessor = new TaskEventProcessor(0, this, _ct);
-        _eventProducers.AddRange(Enumerable.Range(1, 10).Select(i => new TaskEventProducer(i, _eventProcessor, this, _ct)));
+        
+        AddTaskEventProducer(1, 0, 1, 10);
+        AddTaskEventProducer(0, 1, 1, 10);
+        AddTaskEventProducer(1, 0, -10, 10);
     }
 
     void OnDestroy()
     {
-        _eventProcessor.Dispose();
+        _eventProcessor?.Dispose();
     }
 
     public void OnProcessed(ICommand command, ICommandResult result)
@@ -66,26 +68,38 @@ public class Main : MonoBehaviour, ITaskEventPresenter
         _eventProcessor.EnqueueEvent(new SetNumber { Number = 0 });
     }
 
-    public void OnClickAddFunctionButton()
+    private void AddTaskEventProducer(int a, int b, int minX, int maxX)
     {
-        int producerId = _eventProducers.Count;
-        var taskEventProducer = new TaskEventProducer(producerId, _eventProcessor, this, _ct);
-        _eventProducers.Add(taskEventProducer);
-        
         var gameObj = Instantiate(_producerViewPrefab.gameObject, _producerViewParent);
         var producerView = gameObj.GetComponent<ProducerView>();
         if (producerView == null)
             return;
         
-        producerView.Initialize(taskEventProducer, 1, 0, 1, 10);
-        _producerViews.Add(producerView);
+        int producerId = _nextTaskProducerId;
+        _nextTaskProducerId++;
+        var taskEventProducer = new TaskEventProducer(producerId, _eventProcessor, this, producerView,_ct);
+        _taskEventProducers.Add(taskEventProducer);
+        
+        producerView.Initialize(new ProducerViewInit
+        {
+            EventProducer = taskEventProducer,
+            A = a,
+            B = b,
+            MinX = minX,
+            MaxX = maxX
+        });
+    }
+
+    public void OnClickAddFunctionButton()
+    {
+        AddTaskEventProducer(1, 0, 1, 20);
     }
 
     public void OnClickExecuteAllButton()
     {
-        foreach (var producerView in _producerViews)
+        foreach (var taskEventProducer in _taskEventProducers)
         {
-            producerView.OnClickExecuteButton();
+            taskEventProducer.DoClickExecuteButton();
         }
     }
 }
