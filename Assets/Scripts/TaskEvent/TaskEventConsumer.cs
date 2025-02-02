@@ -49,7 +49,6 @@ namespace TaskEvent
             
             // 대기중인 이벤트의 갯수를 증가합니다.
             int overlaps = Interlocked.Increment(ref _eventOverlaps);
-            
             if (overlaps != 1)
                 return;
 
