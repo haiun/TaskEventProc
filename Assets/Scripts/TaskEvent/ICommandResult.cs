@@ -7,14 +7,17 @@ namespace TaskEvent
 
     public class NullResult : ICommandResult
     {
-        public static readonly NullResult Default = new NullResult();
+        public static readonly NullResult Default = new();
     }
 
     public class ErrorResult : ICommandResult
     {
-        public static readonly ErrorResult Default = new ErrorResult();
+        public static readonly ErrorResult Default = new();
     }
 
+    /*
+     * SetNumber의 실행결과입니다.
+     */
     public class SetNumberResult : ICommandResult
     {
         public int BeforeNumber;
@@ -27,6 +30,9 @@ namespace TaskEvent
         }
     }
     
+    /*
+     * AddNumber의 실행결과입니다.
+     */
     public class AddNumberResult : ICommandResult
     {
         public int BeforeNumber;

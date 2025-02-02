@@ -65,7 +65,7 @@ public class Main : MonoBehaviour, ITaskEventPresenter
 
     public void OnClickSetZeroButton()
     {
-        _eventProcessor.EnqueueEvent(new SetNumber { Number = 0 });
+        _eventProcessor.ProcessEventAsync(new SetNumber { Number = 0 }).Forget();
     }
 
     private void AddTaskEventProducer(int a, int b, int minX, int maxX)

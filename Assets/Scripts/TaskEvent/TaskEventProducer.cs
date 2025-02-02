@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 namespace TaskEvent
 {
     /*
-     * 1차함수의 결과값를 일정 시간간격으로 더하도록 요청합니다.
+     * 1차 함수의 치역을 더하는 이벤트를 생성 후 실행합니다.
      */
     public class TaskEventProducer
     {
@@ -29,16 +29,25 @@ namespace TaskEvent
             _ct = _cts.Token;
         }
 
+        /*
+         * 이벤트의 생성을 중지합니다.
+         */
         public void Cancel()
         {
             _cts.Cancel();
         }
 
+        /*
+         * UI에 설정된 값으로 이벤트를 실행합니다.
+         */
         public void DoClickExecuteButton()
         {
             _producerView.OnClickExecuteButton();
         }
         
+        /*
+         * 1차 함수의 정의역을 기반으로 이벤트를 요청합니다.
+         */
         public async UniTask OnClickExecuteButtonAsync(int a, int b, int minX, int maxX, bool useDelay, int delayMs)
         {
             if (useDelay)
@@ -51,7 +60,10 @@ namespace TaskEvent
             }
         }
 
-        private async UniTask RunSequenceAsync(int liner, int constant, int variableMin, int variableMax, int delay)
+        /*
+         * 1차 함수의 정의역을 기반으로 이벤트를 비동기 순차 생성 후 실행합니다.
+         */
+        private async UniTask RunSequenceAsync(int liner, int constant, int variableMin, int variableMax, int delayMs)
         {
             if (variableMin > variableMax)
                 return;
@@ -75,16 +87,19 @@ namespace TaskEvent
             
                 _taskEventPresenter.OnComplete(ProducerId, command, result);
             
-                if (delay <= 0)
+                if (delayMs <= 0)
                     continue;
             
-                await UniTask.Delay(delay, cancellationToken:_ct);
+                await UniTask.Delay(delayMs, cancellationToken:_ct);
                 if (_ct.IsCancellationRequested)
                     return;
             }
             _producerView.ReleaseActiveTaskView(activeTaskView);
         }
     
+        /*
+         * 1차 함수의 정의역을 기반으로 이벤트를 생성 후 동시에 비동기 실행합니다.
+         */
         private async UniTask RunAsync(int liner, int constant, int variableMin, int variableMax)
         {
             if (variableMin > variableMax)
