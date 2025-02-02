@@ -61,7 +61,7 @@ namespace TaskEvent
          */
         private async UniTask ConsumeQueueAsync()
         {
-            // 유니티 함수를 호출할 예정이므로, 업데이트 주기까지 대기
+            // 유니티 함수를 호출할 예정이므로, 유니티루프의 업데이트시점까지 대기
             await UniTask.Yield();
 
             if (_ct.IsCancellationRequested)
