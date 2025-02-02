@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 namespace TaskEvent
@@ -68,6 +67,7 @@ namespace TaskEvent
                 taskIndex++;
                 
                 activeTaskView.SetTaskProgress(taskIndex, taskCount);
+                
                 var command = new AddNumber { Number = i * liner + constant };
                 var result = await _taskEventConsumer.ProcessEventAsync(command);
                 if (_ct.IsCancellationRequested)
@@ -78,7 +78,7 @@ namespace TaskEvent
                 if (delay <= 0)
                     continue;
             
-                await Task.Delay(delay, cancellationToken:_ct);
+                await UniTask.Delay(delay, cancellationToken:_ct);
                 if (_ct.IsCancellationRequested)
                     return;
             }
