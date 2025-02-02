@@ -70,7 +70,7 @@ namespace TaskEvent
 
             while (_eventQueue.TryDequeue(out TaskEventQueueItem queueItem))
             {
-                // 컨텐츠 작업 실행
+                // 이벤트 실행
                 ProcessEventQueueItemImpl(queueItem);
            
                 // 대기중인 이벤트갯수가 1->0일 경우 함수 종료.
