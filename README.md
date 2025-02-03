@@ -88,11 +88,11 @@ _eventOverlaps가 0이 되면 ConsumeQueueAsync 함수가 종료되며, 이벤�
 ## 테스트 프로그램 설명과 테스트 결과
 <img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex0.png"/><br>
 1차 방정식의 치역을 TaskEventProducer에서 생성해서 TaskEventProcessor에 AccumulatedNumber에 덧셈을 누적 연산하는 프로그램을 작성해서 조건을 조작하여 테스트합니다.<br>
-1. 1부터 10까지 수를 AccumulatedNumber에 더합니다. 누적 총합 55<br>
-2. 1을 10번 AccumulatedNumber에 더합니다. 누적 총합 10<br>
-3. 1부터 20까지 수를 AccumulatedNumber에 더합니다. 누적 총합 210<br>
+1. 1부터 10까지 수를 AccumulatedNumber에 더합니다. (누적 총합 55)<br>
+2. 1을 10번 AccumulatedNumber에 더합니다. (누적 총합 10)<br>
+3. 1부터 20까지 수를 AccumulatedNumber에 더합니다. (누적 총합 210)<br>
 
-3개의 시나리오를 동시에 비동기 실행 후 누적합이 275 (55+10+210)이 되는지 확인합니다.<br>
+3개의 시나리오를 동시에 비동기 실행 후 누적 합이 275 (55+10+210)이 되는지 확인합니다.<br>
 <br><br>
 
 ### 1. Client-Server간 RPC Protocol을 모방<br>
@@ -140,7 +140,7 @@ private async UniTask RunSequenceAsync(int liner, int constant, int variableMin,
 TaskEventProcessor에 이벤트를 하나씩 순차적으로 요청하고 결과를 받은 후 100ms만큼 대기합니다.<br>
 <br>
 <img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex1.gif"/><br>
-1,2 번째 시나리오는 1초뒤 3번째 시나리오는 2초뒤 요청이 끝나고, 누적합이 275가 되는 것을 확인 할 수 있습니다.<br>
+1, 2번째 시나리오는 1초 뒤 3번째 시나리오는 2초 뒤 요청이 끝나고, 누적 합이 275가 되는 것을 확인 할 수 있습니다.<br>
 <br><br>
 
 ### 2. 모든 작업을 즉시 처리 요청<br>
@@ -178,7 +178,7 @@ private async UniTask RunAsync(int liner, int constant, int variableMin, int var
    _producerView.ReleaseActiveTaskView(activeTaskView);
 }
 ```
-UI를 조작해서 Use Delay (100ms)토글을 끄고 실행하면, 모든 작업을 즉시 처리합니다.<br>
+UI를 조작해서 Use Delay (100ms) 토글을 끄고 실행하면, 모든 작업을 즉시 처리합니다.<br>
 <br>
 <img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex2.gif"/><br>
-동시에 40개의 이벤트 모두 요청하고 즉시 누적합이 275가 되는 것을 확인 할 수 있습니다.<br>
+동시에 40개의 이벤트 모두 요청하고 즉시 누적 합이 275가 되는 것을 확인 할 수 있습니다.<br>
