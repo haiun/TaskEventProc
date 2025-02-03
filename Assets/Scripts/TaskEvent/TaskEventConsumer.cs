@@ -41,7 +41,7 @@ namespace TaskEvent
         }
 
         /*
-         * 이벤트를 큐에 등록하고, 이벤트를 소비하는 풀링로직을 시작합니다.
+         * 이벤트를 큐에 등록하고, 이벤트를 폴링을 시작합니다.
          */
         private void EnqueueItemAndTryConsumeQueue(TaskEventQueueItem eventQueueItem)
         {
@@ -52,7 +52,7 @@ namespace TaskEvent
             if (overlaps != 1)
                 return;
 
-            // 0 -> 1이 되는 순간, 이벤트 풀링을 시작합니다.
+            // 0 -> 1이 되는 순간, 이벤트 폴링을 시작합니다.
             ConsumeQueueAsync().Forget();
         }
 
