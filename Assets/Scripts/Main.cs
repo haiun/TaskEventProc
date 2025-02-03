@@ -28,7 +28,7 @@ public class Main : MonoBehaviour, ITaskEventPresenter
         
         AddTaskEventProducer(1, 0, 1, 10);
         AddTaskEventProducer(0, 1, 1, 10);
-        AddTaskEventProducer(1, 0, -10, 10);
+        AddTaskEventProducer(1, 0, 1, 20);
     }
 
     void OnDestroy()
@@ -92,7 +92,7 @@ public class Main : MonoBehaviour, ITaskEventPresenter
 
     public void OnClickAddFunctionButton()
     {
-        AddTaskEventProducer(1, 0, 1, 20);
+        AddTaskEventProducer(1, 0, 1, 10);
     }
 
     public void OnClickExecuteAllButton()
