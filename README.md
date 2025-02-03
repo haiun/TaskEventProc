@@ -32,7 +32,7 @@ public async UniTask<ICommandResult> ProcessEventAsync(ICommand commandItem)
 이벤트 실행 결과를 통지하기 위해 UniTaskCompletionSource를 사용하여 이벤트 큐에 저장하고, 각 결과에 대해 비동기적으로 통지합니다.<br>
 <br><br>
 
-## 동시성을 고려한 이벤트 추가 후 이벤트 풀링 시작
+## 동시성을 고려한 이벤트 추가 후 이벤트 폴링 시작
 ```csharp
 private void EnqueueItemAndTryConsumeQueue(TaskEventQueueItem eventQueueItem)
 {
@@ -43,7 +43,7 @@ private void EnqueueItemAndTryConsumeQueue(TaskEventQueueItem eventQueueItem)
     if (overlaps != 1)
         return;
 
-    // 0 -> 1이 되는 순간, 이벤트 풀링을 시작합니다.
+    // 0 -> 1이 되는 순간, 이벤트 폴링을 시작합니다.
     ConsumeQueueAsync().Forget();
 }
 ```
@@ -82,7 +82,7 @@ private async UniTask ConsumeQueueAsync()
 }
 ```
 이벤트 큐에서 이벤트를 순차적으로 처리하고, Interlocked.Decrement로 대기 중인 이벤트 수를 갱신합니다.<br>
-_eventOverlaps가 0이 되면 ConsumeQueueAsync 함수가 종료되며, 이벤트 큐에 새 아이템이 추가되면 EnqueueItemAndTryConsumeQueue에서 다시 풀링을 시작합니다.<br>
+_eventOverlaps가 0이 되면 ConsumeQueueAsync 함수가 종료되며, 이벤트 큐에 새 아이템이 추가되면 EnqueueItemAndTryConsumeQueue에서 다시 폴링을 시작합니다.<br>
 그래서, 이벤트 요청에 대해 높은 반응성을 가집니다.<br>
 <br><br>
 ## 테스트 프로그램 설명과 테스트 결과
