@@ -65,35 +65,40 @@ namespace TaskEvent
          */
         private async UniTask RunSequenceAsync(int liner, int constant, int variableMin, int variableMax, int delayMs)
         {
-            if (variableMin > variableMax)
-                return;
-            
-            if (_ct.IsCancellationRequested)
+            if (variableMin > variableMax || _ct.IsCancellationRequested)
                 return;
 
             int taskIndex = 0;
             int taskCount = variableMax - variableMin + 1;
+            
+            // 작업 진행상황 표시용 UI를 생성합니다.
             var activeTaskView = _producerView.CreateActiveTaskView();
             foreach (int i in Enumerable.Range(variableMin, taskCount))
             {
                 taskIndex++;
                 
+                // 작업 진행상황을 UI에 갱신합니다.
                 activeTaskView.SetTaskProgress(taskIndex, taskCount);
                 
+                // i번째 1차 함수 치역을 더하는 이벤트를 생성합니다.
                 var command = new AddNumber { Number = i * liner + constant };
+                
+                // TaskEventProcessor에 이벤트를 요청합니다.
                 var result = await _taskEventConsumer.ProcessEventAsync(command);
                 if (_ct.IsCancellationRequested)
                     return;
-            
+                
                 _taskEventPresenter.OnComplete(ProducerId, command, result);
             
                 if (delayMs <= 0)
                     continue;
-            
+                
                 await UniTask.Delay(delayMs, cancellationToken:_ct);
                 if (_ct.IsCancellationRequested)
                     return;
             }
+            
+            // 작업 진행상황 표시용 UI 제거합니다.
             _producerView.ReleaseActiveTaskView(activeTaskView);
         }
     
@@ -102,18 +107,21 @@ namespace TaskEvent
          */
         private async UniTask RunAsync(int liner, int constant, int variableMin, int variableMax)
         {
-            if (variableMin > variableMax)
-                return;
-            
-            if (_ct.IsCancellationRequested)
+            if (variableMin > variableMax || _ct.IsCancellationRequested)
                 return;
         
             int taskCount = variableMax - variableMin + 1;
+            
+            // 작업 진행상황 표시용 UI를 생성합니다.
             var activeTaskView = _producerView.CreateActiveTaskView();
             activeTaskView.SetTaskProgress(taskCount, taskCount);
+            
+            // 1차 함수 치역을 더하는 이벤트를 모두 생성합니다.
             var commands = Enumerable.Range(variableMin, taskCount)
                 .Select(i => new AddNumber { Number = i * liner + constant })
                 .ToArray();
+            
+            // 생성된 이벤트를 모두 요청하고 결과를 대기합니다.
             var tasks = commands.Select(command => _taskEventConsumer.ProcessEventAsync(command)).ToArray();
             var results = await UniTask.WhenAll(tasks);
         
@@ -124,6 +132,8 @@ namespace TaskEvent
             {
                 _taskEventPresenter.OnComplete(ProducerId, commands[i], results[i]);
             }
+            
+            // 작업 진행상황 표시용 UI를 제거합니다.
             _producerView.ReleaseActiveTaskView(activeTaskView);
         }
     }
