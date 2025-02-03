@@ -2,7 +2,7 @@
 이 프로젝트는 Unity 클라이언트와 .NET 서버 간 실시간 동기화 시스템을 구현하면서, Producer-Consumer 패턴을 설계했던 방법을 설명합니다.<br>
 중요한 포인트는 이벤트 풀링을 항상 하지 않으면서도 높은 반응성을 구현하는 방식입니다.<br>
 <br>
-## 연구구목표
+## 연구 목표
 싱글 기반으로 프로토타이핑을 진행하여 게임성을 검증한 후, 실시간 멀티플레이 게임으로 구조를 확장하는 과정에서 몇 가지 문제를 경험했습니다.
 
 1. 이벤트 큐로 이벤트를 수집하는 로직에서 멀티쓰레드를 통해 동시에 이벤트를 수집해야 했습니다.
@@ -85,17 +85,83 @@ private async UniTask ConsumeQueueAsync()
 _eventOverlaps가 0이 되면 ConsumeQueueAsync 함수가 종료되며, 이벤트 큐에 새 아이템이 추가되면 EnqueueItemAndTryConsumeQueue에서 다시 풀링을 시작합니다.<br>
 
 ## 테스트 프로그램 시나리오
-1차 방정식의 치역을 TaskEventProducer에서 생성해서 TaskEventProcessor에 AccumulatedNumber에 덧셈을 누적 연산하는 프로그램을 작성해서 조건을 조작하여 테스트합니다.
-1. 1부터 10까지 수를 더함. 총합 55
-2. 1을 10번 더함. 총합 10
-3. 1부터 20까지 수를 더함. 총합 210
+<img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex0.png"/><br>
+1차 방정식의 치역을 TaskEventProducer에서 생성해서 TaskEventProcessor에 AccumulatedNumber에 덧셈을 누적 연산하는 프로그램을 작성해서 조건을 조작하여 테스트합니다.<br>
+1. 1부터 10까지 수를 더함. 총합 55<br>
+2. 1을 10번 더함. 총합 10<br>
+3. 1부터 20까지 수를 더함. 총합 210<br>
 
-3개의 시나리오를 모두 더해서 누적합이 275 (55+10+210)이 되는지 확인합니다.
+3개의 시나리오를 모두 더해서 누적합이 275 (55+10+210)이 되는지 확인합니다.<br>
+<br>
+#### 1. Client-Server간 RPC Protocol을 모방<br>
 
-#### 1. Client-Server간 RPC Protocol을 모방
 ```csharp
-```
+private async UniTask RunSequenceAsync(int liner, int constant, int variableMin, int variableMax, int delayMs)
+{
+   if (variableMin > variableMax)
+       return;
+   
+   if (_ct.IsCancellationRequested)
+       return;
 
-#### 2. 모든 작업을 즉시 처리 요청
-```csharp
+   int taskIndex = 0;
+   int taskCount = variableMax - variableMin + 1;
+   var activeTaskView = _producerView.CreateActiveTaskView();
+   foreach (int i in Enumerable.Range(variableMin, taskCount))
+   {
+       taskIndex++;
+       
+       activeTaskView.SetTaskProgress(taskIndex, taskCount);
+       
+       var command = new AddNumber { Number = i * liner + constant };
+       var result = await _taskEventConsumer.ProcessEventAsync(command);
+       if (_ct.IsCancellationRequested)
+           return;
+   
+       _taskEventPresenter.OnComplete(ProducerId, command, result);
+   
+       if (delayMs <= 0)
+           continue;
+   
+       await UniTask.Delay(delayMs, cancellationToken:_ct);
+       if (_ct.IsCancellationRequested)
+           return;
+   }
+   _producerView.ReleaseActiveTaskView(activeTaskView);
+}
 ```
+<br>
+<img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex1.gif"/><br>
+<br>
+#### 2. 모든 작업을 즉시 처리 요청<br>
+
+```csharp
+private async UniTask RunAsync(int liner, int constant, int variableMin, int variableMax)
+{
+   if (variableMin > variableMax)
+       return;
+   
+   if (_ct.IsCancellationRequested)
+       return;
+
+   int taskCount = variableMax - variableMin + 1;
+   var activeTaskView = _producerView.CreateActiveTaskView();
+   activeTaskView.SetTaskProgress(taskCount, taskCount);
+   var commands = Enumerable.Range(variableMin, taskCount)
+       .Select(i => new AddNumber { Number = i * liner + constant })
+       .ToArray();
+   var tasks = commands.Select(command => _taskEventConsumer.ProcessEventAsync(command)).ToArray();
+   var results = await UniTask.WhenAll(tasks);
+
+   if (_ct.IsCancellationRequested)
+       return;
+
+   foreach (int i in Enumerable.Range(0, variableMax - variableMin))
+   {
+       _taskEventPresenter.OnComplete(ProducerId, commands[i], results[i]);
+   }
+   _producerView.ReleaseActiveTaskView(activeTaskView);
+}
+```
+<br>
+<img src="https://github.com/haiun/TaskEventProc/blob/main/ReadMeImage/Ex2.gif"/><br>
