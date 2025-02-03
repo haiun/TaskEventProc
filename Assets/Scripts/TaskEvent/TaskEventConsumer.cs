@@ -47,12 +47,12 @@ namespace TaskEvent
         {
             _eventQueue.Enqueue(eventQueueItem);
             
-            // 대기중인 이벤트의 갯수를 증가합니다.
+            // 대기중인 이벤트의 수를 증가합니다.
             int overlaps = Interlocked.Increment(ref _eventOverlaps);
             if (overlaps != 1)
                 return;
 
-            // 0->1이 되는 순간 이벤트 풀링 시작
+            // 0 -> 1이 되는 순간, 이벤트 풀링을 시작합니다.
             ConsumeQueueAsync().Forget();
         }
 
@@ -72,8 +72,7 @@ namespace TaskEvent
                 // 이벤트 실행
                 ProcessEventQueueItemImpl(queueItem);
            
-                // 대기중인 이벤트갯수가 1->0일 경우 함수 종료.
-                // _eventQueue에 이벤트가 추가될 때 다시 풀링 시작됩니다.
+                // 대기 중인 이벤트 수가 1 -> 0이 될 경우 함수 종료
                 int overlaps = Interlocked.Decrement(ref _eventOverlaps);
                 if (overlaps == 0)
                     return;
